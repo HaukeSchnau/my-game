@@ -1,3 +1,7 @@
+use crate::windowing::run;
+
+mod windowing;
+
 fn main() {
-    println!("Hello, world!");
+    run("My awesome game!");
 }
