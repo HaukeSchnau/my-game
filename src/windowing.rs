@@ -19,18 +19,31 @@ pub async fn run(title: &str) {
     event_loop.run(move |event, elwt| {
         match event {
             Event::WindowEvent {
-                event: WindowEvent::CloseRequested,
-                ..
-            } => {
-                elwt.exit();
+                ref event,
+                window_id,
+            } if window_id == state.window.id() => if !state.input(event) {
+                match event {
+                    WindowEvent::CloseRequested => {
+                        elwt.exit();
+                    }
+                    WindowEvent::Resized(physical_size) => {
+                        state.resize(*physical_size);
+                    }
+                    _ => {}
+                }
             }
-            Event::WindowEvent {
-                event: WindowEvent::Resized(new_size),
-                ..
-            } => {
-                state.resize(new_size);
+            Event::AboutToWait {} => {
+                state.update();
+                match state.render() {
+                    Ok(_) => {}
+                    // Reconfigure the surface if lost
+                    Err(wgpu::SurfaceError::Lost) => state.resize(state.size),
+                    // The system is out of memory, we should probably quit
+                    Err(wgpu::SurfaceError::OutOfMemory) => elwt.exit(),
+                    // All other errors (Outdated, Timeout) should be resolved by the next frame
+                    Err(e) => eprintln!("{:?}", e),
+                }
             }
-            Event::AboutToWait {} => {}
             _ => ()
         }
     }).expect("Failed to run event loop");
