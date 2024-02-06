@@ -6,6 +6,7 @@ mod buffers;
 mod texture;
 mod camera;
 mod camera_controller;
+mod instance;
 
 #[tokio::main]
 async fn main() {
