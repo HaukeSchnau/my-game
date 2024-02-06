@@ -1,17 +1,20 @@
 use winit::{
-    event::{Event, WindowEvent},
+    event::Event,
     event_loop::{ControlFlow, EventLoop},
     window::WindowBuilder,
 };
+use winit::event::WindowEvent;
 
-pub fn run(title: &str) {
+use crate::state::State;
+
+pub async fn run(title: &str) {
     env_logger::init();
     let event_loop = EventLoop::new().unwrap();
     let window = WindowBuilder::new().build(&event_loop).unwrap();
 
-    window.set_title(title);
-
     event_loop.set_control_flow(ControlFlow::Poll);
+
+    let mut state = State::new(&window).await;
 
     event_loop.run(move |event, elwt| {
         match event {
@@ -19,29 +22,15 @@ pub fn run(title: &str) {
                 event: WindowEvent::CloseRequested,
                 ..
             } => {
-                println!("The close button was pressed; stopping");
                 elwt.exit();
             }
-            Event::AboutToWait => {
-                // Application update code.
-
-                // Queue a RedrawRequested event.
-                //
-                // You only need to call this if you've determined that you need to redraw in
-                // applications which do not always need to. Applications that redraw continuously
-                // can render here instead.
-                window.request_redraw();
-            }
             Event::WindowEvent {
-                event: WindowEvent::RedrawRequested,
+                event: WindowEvent::Resized(new_size),
                 ..
             } => {
-                // Redraw the application.
-                //
-                //                 // It's preferable for applications that do not render continuously to render in
-                // this event rather than in AboutToWait, since windowing in here allows
-                // the program to gracefully handle redraws requested by the OS.
+                state.resize(new_size);
             }
+            Event::AboutToWait {} => {}
             _ => ()
         }
     }).expect("Failed to run event loop");
