@@ -1,7 +1,8 @@
-use crate::windowing::run;
+use crate::game_loop::run;
 
-mod windowing;
+mod game_loop;
 mod state;
+mod buffers;
 
 #[tokio::main]
 async fn main() {
