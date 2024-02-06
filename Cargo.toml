@@ -11,3 +11,4 @@ log = "0.4.20"
 wgpu = "0.19.1"
 winit = "0.29.10"
 tokio = { version = "1.0.0", features = ["rt", "rt-multi-thread", "macros"] }
+bytemuck = "1.14.1"
