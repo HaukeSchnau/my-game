@@ -13,3 +13,4 @@ winit = "0.29.10"
 tokio = { version = "1.0.0", features = ["rt", "rt-multi-thread", "macros"] }
 bytemuck = "1.14.1"
 image = { version = "0.24.8", features = ["jpeg", "png"] }
+anyhow = "1.0.79"
