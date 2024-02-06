@@ -4,6 +4,8 @@ mod game_loop;
 mod state;
 mod buffers;
 mod texture;
+mod camera;
+mod camera_controller;
 
 #[tokio::main]
 async fn main() {
